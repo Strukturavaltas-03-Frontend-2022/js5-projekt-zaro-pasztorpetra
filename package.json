@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Strukturavaltas-03-Frontend-2022/js5-projekt-zaro-pasztorpetra/issues"
   },
-  "homepage": "https://github.com/Strukturavaltas-03-Frontend-2022/js5-projekt-zaro-pasztorpetra#readme"
+  "homepage": "https://github.com/Strukturavaltas-03-Frontend-2022/js5-projekt-zaro-pasztorpetra#readme",
+  "dependencies": {
+    "font-awesome": "^4.7.0"
+  }
 }
