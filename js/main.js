@@ -1,45 +1,14 @@
 import { apiUrl } from './settings.js';
+import { getData } from './fetch.js';
 
-// // Create a new user
-// // // {
-// //   "id": 1,
-// //   "name": "Lee Garrit",
-// //   "emailAddress": "lgarrit0@latimes.com",
-// //   "address": "9 Eagan Pass"
-// // }
-
-// await fetch(`${apiUrl}users`, {
-//   method: 'POST',
-//   body: JSON.stringify ({"name": "Pásztor Petra","emailAddress": "lgarrit0@latimes.com","address": "9 Eagan Pass"}),
-//   headers: {
-//     'Content-type': 'application/json',
-//   },
-// });
-
-
-// //Get all users
-// const response = await fetch (`${apiUrl}users`);
-// const userList = await response.json();
-// console.log(userList);
-
+//Keys of users. 
+let keys = ["id", "name", "emailAddress", "address"];
 
 //START
 //GET data from the server
 
-function getServerData (url) {
-  let fetchOptions = {
-    method: "GET",
-    mode: "cors",
-    cache: "no-cache"
-  };
-  return fetch(url, fetchOptions).then(
-    response => response.json(),
-    err => console.error(err)
-  );
-}
-
-function getUsers() {
-getServerData(apiUrl).then(
+const getUsers = () => {
+getData(apiUrl).then(
   data => fillDataTable(data, "userTable")
   );
 }
@@ -47,7 +16,7 @@ getServerData(apiUrl).then(
 getUsers();
 
 //Fill table with server data 
-function fillDataTable(data, tableID) {
+const fillDataTable = (data, tableID) => {
     let table = document.querySelector(`#${tableID}`);
     if (!table) {
       console.error(`Table "${tableID}" is not found.`);
@@ -62,9 +31,9 @@ function fillDataTable(data, tableID) {
 
     for (let row of data) {
       let tr = createAnyElement("tr");
-      for (let k in row) {
+      for (let k of keys) {
         let td = createAnyElement("td");
-        td.textContent = row[k];            //innerHTML
+        td.innerHTML = row[k];  
         tr.appendChild(td);
       }
       let btnGroup = createBtnGroup();
@@ -73,7 +42,7 @@ function fillDataTable(data, tableID) {
     }
 }
 
-function createAnyElement(name, attributes) {
+const createAnyElement = (name, attributes) => {
   let element = document.createElement(name);
   for (let k in attributes) {
     element.setAttribute(k, attributes[k]);
@@ -83,11 +52,18 @@ function createAnyElement(name, attributes) {
 
 
 // Create buttons 
-function createBtnGroup() {
+const createBtnGroup = () => {
   let group = createAnyElement("div", {class: "btn btn-group"});
-  let editBtn = createAnyElement("button", {class: "btn btn-edit", onclick:"editUser(this)"});
+  let editBtn = createAnyElement("button", {class: "btn btn-edit"});
   editBtn.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
-  let delBtn = createAnyElement("button", {class: "btn btn-delete", onclick:"deleteUser(this)"});
+  editBtn.addEventListener('click', function() {
+    editUser(this);
+  });
+  
+  let delBtn = createAnyElement("button", {class: "btn btn-delete"});
+  delBtn.addEventListener('click', function() {
+    deleteUser(this);
+  });
   delBtn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
   
   group.appendChild(editBtn);
@@ -100,6 +76,7 @@ function createBtnGroup() {
 }
 
 // Delete button  
+
 function deleteUser(btn) {
   let tr = btn.parentElement.parentElement.parentElement;
   let id = tr.querySelector("td:first-child").innerHTML;
@@ -111,18 +88,18 @@ function deleteUser(btn) {
 
   fetch(`${apiUrl}/${id}`, fetchOptions).then(
     resp => resp.json(),
-    err => console.error(err)
-  ).then(
-    data => {
-      getUsers();
-    }
-  );
-};
+    err => console.error(err) ).then(
+      data => {
+        getUsers();
+      }
+    );
+}
+
 
 // Create new user
-function newUserRow (row) {
+function newUserRow(row) {
   let tr = createAnyElement("tr");
-  for (let k in {id:'', name:'', email:'', address:''}) {
+  for (let k of keys) {
     let td = createAnyElement("td");
     let input = createAnyElement("input", {
       class: "input",
@@ -133,9 +110,11 @@ function newUserRow (row) {
   }
   let newBtn = createAnyElement("button", {
     class: "btn btn-new",
-    onclick: "createUser(this)"
   });
   newBtn.innerHTML = '<i class="fa fa-plus" aria-hidden="true"></i>';
+  newBtn.addEventListener('click', function() {
+    createUser(this);
+  });
   let td = createAnyElement("td");
   td.appendChild(newBtn);
   tr.appendChild(td);
@@ -143,7 +122,7 @@ function newUserRow (row) {
   return tr;
 }
 
-function createUser(btn) {
+const createUser = (btn) => {
   let tr = btn.parentElement.parentElement;
   let data = getRowData(tr);
   delete data.id;
@@ -173,6 +152,33 @@ function getRowData(tr) {
   }
   return data;
 }
+
+// Edit user
+
+const editUser = (btn) => {
+  let tr = btn.parentElement.parentElement.parentElement;
+}
+
+// for (let row of data) {
+//   let tr = createAnyElement("tr");
+//   for (let k of keys) {
+//     let td = createAnyElement("td");
+//     if (k == "id") {
+//       td.innerHTML = row[k];
+//     } else {
+//     let input = createAnyElement("input", {
+//       class: "form-control",
+//       value: row[k]
+//     });
+//     td.appendChild(input);  
+//     }      
+//     tr.appendChild(td);
+//   }
+//   let btnGroup = createBtnGroup();
+//   tr.appendChild(btnGroup);
+//   tBody.appendChild(tr);
+// }
+
 
 
 
