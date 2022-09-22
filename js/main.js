@@ -1,15 +1,17 @@
 import { apiUrl } from './settings.js';
 import { getData } from './fetch.js';
+import { validate } from './validation.js';
 
 //Keys of users. 
 let keys = ["id", "name", "emailAddress", "address"];
+let editMode = false;
 
 //START
 //GET data from the server
 
 const getUsers = () => {
 getData(apiUrl).then(
-  data => fillDataTable(data, "userTable")
+  data => fillDataTable(data.reverse(), "userTable"),
   );
 }
 
@@ -47,6 +49,7 @@ const createAnyElement = (name, attributes) => {
   for (let k in attributes) {
     element.setAttribute(k, attributes[k]);
   };
+  
   return element;
 }
 
@@ -153,35 +156,33 @@ function getRowData(tr) {
   return data;
 }
 
-// Edit user
+// Edit row
+const filldatarow = (tr, data) => {
+  tr.innerHTML = '';
+  for (let k of keys) {
+    let td = createAnyElement('td');
+    let input = createAnyElement("input", {
+            class: "form-control",
+            value: data[k]
+          });
+    input.setAttribute('name', k);
+    if (k === 'id') input.setAttribute('readonly', 'true');
+    td.appendChild(input);
+    tr.appendChild(td);
+  }
+  
+  // Gombok létrehozása
+
+  return tr;
+};
 
 const editUser = (btn) => {
-  let tr = btn.parentElement.parentElement.parentElement;
-}
+  editMode = true;
+  const tr = btn.parentElement.parentElement.parentElement;
+  const data = getRowData(tr);
 
-// for (let row of data) {
-//   let tr = createAnyElement("tr");
-//   for (let k of keys) {
-//     let td = createAnyElement("td");
-//     if (k == "id") {
-//       td.innerHTML = row[k];
-//     } else {
-//     let input = createAnyElement("input", {
-//       class: "form-control",
-//       value: row[k]
-//     });
-//     td.appendChild(input);  
-//     }      
-//     tr.appendChild(td);
-//   }
-//   let btnGroup = createBtnGroup();
-//   tr.appendChild(btnGroup);
-//   tBody.appendChild(tr);
-// }
+  return filldatarow(tr, data);
+};
 
-
-
-
-
-
+// Validation
 
