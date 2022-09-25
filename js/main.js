@@ -154,7 +154,7 @@ function getRowData(tr) {
     data[inputs[i].name] = inputs[i].value;
   }
   return data;
-}
+};
 
 // Edit row
 const filldatarow = (tr, data) => {
@@ -171,7 +171,8 @@ const filldatarow = (tr, data) => {
     tr.appendChild(td);
   }
   
-  // Gombok létrehozása
+  const btnGroup = createBtnGroup('Save', 'Cancel');
+  tr.appendChild(btnGroup);
 
   return tr;
 };
@@ -186,3 +187,44 @@ const editUser = (btn) => {
 
 // Validation
 
+// const alertBoxWrong = (k, vh) => {
+//   const box = document.createElement('div');
+//   box.innerHTML = `A ${k} validating is wrong`;
+//   box.setAttribute('style', `background-color:red; bottom: ${vh}vh;`);
+//   box.setAttribute('class', 'message');
+//   messageBox.appendChild(box);
+//   setTimeout(() => { messageBox.removeChild(box); }, 5000);
+// };
+
+// const alertBoxGood = (k, vh) => {
+//   const box = document.createElement('div');
+//   box.innerHTML = `A ${k} validating is ok`;
+//   box.setAttribute('style', `background-color:green; bottom: ${vh}vh;`);
+//   box.setAttribute('class', 'message');
+//   messageBox.appendChild(box);
+//   setTimeout(() => { messageBox.removeChild(box); }, 5000);
+// };
+// const alertBoxDuplcatedEditing = () => {
+//   const box = document.createElement('div');
+//   box.innerHTML = 'Please, finish your actual editing first.';
+//   box.setAttribute('style', 'background-color:red; bottom: 50vh;');
+//   box.setAttribute('class', 'message');
+
+//   messageBox.appendChild(box);
+//   setTimeout(() => { messageBox.removeChild(box); }, 5000);
+// };
+
+// const validate = (data, wrongvalidate) => {
+//   let i = 1;
+//   for (const k of ['name', 'emailAdress', 'adress']) {
+//     if (roles[k].test(data[k])) alertBoxGood(k, (40 + i * 10));
+//     else {
+//       alertBoxWrong(k, (40 + i * 20));
+//       wrongvalidate = true;
+//       break;
+//     }
+//     i += 1;
+//   }
+//   messageBox.setAttribute('display', 'none');
+//   return wrongvalidate;
+// };
